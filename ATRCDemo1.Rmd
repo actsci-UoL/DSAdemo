@@ -1,5 +1,10 @@
 ---
 title: "R markdown demo"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 output:
   html_document: default
   html_notebook: default
@@ -23,11 +28,11 @@ library(RSQLite)
 
 ```{r}
 indicators <- 
-  read_csv("~/NewStruct/Rprojects/ATRC2019/Data/indicators.csv") %>% 
+  read_csv("Data/indicators.csv") %>% 
   mutate(Country_Code = as.factor(Country_Code),
          Indicator_Code = as.factor(Indicator_Code))
 country <- 
-  read_csv("~/NewStruct/Rprojects/ATRC2019/Data/country.csv") %>% 
+  read_csv("Data/country.csv") %>% 
   mutate(Country_Code = as.factor(Country_Code),
          Region = as.factor(Region),
          Income_Group = as.factor(Income_Group))
