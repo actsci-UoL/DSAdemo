@@ -1,0 +1,206 @@
+---
+title: "R markdown demo"
+output:
+  html_document: default
+  html_notebook: default
+  pdf_document: default
+---
+
+Demo of some thing.
+
+Using the World Bank Development Indicators Excel download from:
+
+http://datatopics.worldbank.org/world-development-indicators/
+
+
+```{r setup, include=TRUE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, include = TRUE, cache = FALSE)
+library(tidyverse)
+library(RSQLite)
+```
+
+### Read in the data as data frames
+
+```{r}
+indicators <- 
+  read_csv("~/NewStruct/Rprojects/ATRC2019/Data/indicators.csv") %>% 
+  mutate(Country_Code = as.factor(Country_Code),
+         Indicator_Code = as.factor(Indicator_Code))
+country <- 
+  read_csv("~/NewStruct/Rprojects/ATRC2019/Data/country.csv") %>% 
+  mutate(Country_Code = as.factor(Country_Code),
+         Region = as.factor(Region),
+         Income_Group = as.factor(Income_Group))
+```
+
+
+
+## Questions
+
+For each question below (not the first), find the answer first using pure SQL. Then check you can do the same using `dplr` operating on the data frames.
+
+  * Change the code creating the database to make a permanent file on disk
+  * How many different indicators are there?
+  * List the regional groups
+  * List the regional groups in alphabetical order
+  * List the regional groups in reverse alphabetical order
+  * Which country codes are not linked to a region?
+  * Calculate an average column
+    +  Return the average of the indicator for the years 2015-2017 for a country of your choice.
+  * List the indicators that contain 'life expectancy' in the indicator name
+  * Find the average and maximum female life expectancy at birth in 2017
+  * Find the name of the country with the maximum female life expectancy at birth
+    +  you can hardcode the value you found in the last query
+  * Find the name of the country with the minimum female life expectancy at birth in 2017
+    +  this time write a single query to find the minimum value and print the country name
+  * Use a join to add Region and Income Group to the indicators table
+    +  Print the countries with life expectancy > 85 together with their region and Income group
+  * Calculate the average female life expectancy at birth in 2017 for each region and income group.
+    +  Rename the life expectancy column to something meaningful and order by region and life expectancy.
+    
+### Special bonus task
+
+Use `dbplyr (https://db.rstudio.com/dplyr/) with the dplyr commands you have already written and check how closely the SQL it generates matches yours.
+
+## Model solutions
+
+
+### How many different indicators and countries are there?
+
+```{r}
+indicators %>%  summarise(Num_indicators = n_distinct(Indicator_Code))
+```
+
+```{r}
+indicators %>%  summarise(Num_countries = n_distinct(Country_Code))
+```
+
+
+### List the regional groups
+
+Dplyr solution:
+
+```{r}
+country %>% filter(!is.na(Region)) %>% select(Region) %>% unique()
+```
+
+### List the country names and codes
+
+```{r}
+indicators %>% 
+  select(Country_Code, Country_Name) %>% 
+  unique() %>% 
+  arrange(Country_Code) %>% 
+  head(50)
+``` 
+
+### Which country codes are not linked to a region?
+
+```{r}
+country %>% 
+  filter(is.na(Region)) %>% 
+  select(Country_Code) %>% 
+  unique()
+``` 
+
+
+### List the indicators that contain 'life expectancy' in the indicator name
+
+Dplyr solution:
+
+```{r}
+indicators %>% 
+  filter(str_detect(Indicator_Name, "(?i)life expectancy")) %>% # (?i) says ignore case
+  select(Indicator_Name, Indicator_Code) %>% 
+  unique()
+```
+
+```{r}
+indicators %>% 
+  filter(str_detect(Indicator_Name, "(?i)birth"),
+         str_detect(Indicator_Name, "(?i)attend")) %>%
+  select(Indicator_Name, Indicator_Code) %>% 
+  unique()
+```
+
+### Find the average, maximum, and maximum female life expectancy at birth in 2016
+
+```{r}
+indicators %>% 
+  filter(Indicator_Code == "SP.DYN.LE00.FE.IN") %>% 
+  summarise(Av_Life_Exp = mean(Yr2016, na.rm = TRUE),
+            Min_Life_Exp = min(Yr2016, na.rm = TRUE),
+            Max_Life_Exp = max(Yr2016, na.rm = TRUE))
+```
+
+### Find the name of the country with the minimum female life expectancy at birth
+
+
+```{r}
+indicators %>% 
+  filter(Indicator_Code == "SP.DYN.LE00.FE.IN") %>% 
+  filter(Yr2017 == min(Yr2017, na.rm = TRUE)) %>% 
+  select(Country_Name, Yr2017)
+```
+
+### Plot life expectancy at birth vs percentage of births attended...
+
+```{r}
+plt.df <- indicators %>% 
+  select(Country_Code, Indicator_Code, Yr2016) %>% 
+  filter(Indicator_Code == "SH.STA.BRTC.ZS" | Indicator_Code == "SP.DYN.LE00.FE.IN") %>% 
+  filter(!is.na(Yr2016)) %>% 
+  spread(key = Indicator_Code, value = Yr2016) %>% 
+  drop_na() %>% 
+  rename(Life_Exp = SP.DYN.LE00.FE.IN, Attended = SH.STA.BRTC.ZS)
+
+ggplot(plt.df) +
+  geom_point(aes(Attended, Life_Exp)) +
+  geom_smooth(aes(Attended, Life_Exp), method = lm)
+```
+```{r}
+plt.df <- indicators %>% 
+  select(Country_Code, Indicator_Code, Yr2016) %>% 
+  filter(Indicator_Code == "SH.STA.BRTC.ZS" | Indicator_Code == "SP.DYN.LE00.FE.IN") %>% 
+  filter(!is.na(Yr2016)) %>% 
+  spread(key = Indicator_Code, value = Yr2016) %>% 
+  drop_na() %>% 
+  rename(Life_Exp = SP.DYN.LE00.FE.IN, Attended = SH.STA.BRTC.ZS) %>% 
+  left_join(country)
+
+ggplot(plt.df) +
+  geom_point(aes(Attended, Life_Exp, color = Income_Group, shape = Income_Group), size = 3) +
+  geom_smooth(aes(Attended, Life_Exp), method = lm)
+```
+
+
+### Use a join to add Region and Income Group to the indicators table
+Print the countries with life expectancy > 85 together with their region and Income group.
+
+```{r}
+indicators %>% 
+  select(Country_Code, Country_Name, Indicator_Code, Yr2016) %>% 
+  filter(Indicator_Code == "SP.DYN.LE00.FE.IN") %>% 
+  filter(Yr2016 > 85) %>% 
+  rename(Fem_Life_Exp = Yr2016) %>%
+  left_join(country) %>%
+  select(Country_Name, Region, Fem_Life_Exp) %>% 
+  arrange(desc(Fem_Life_Exp))
+```
+
+
+### Calculate the average female life expectancy at birth in 2017 for each region and income group.
+Rename the life expectancy column to something meaningful and order by region and life expectancy.
+
+```{r}
+indicators %>% 
+  select(Country_Code, Country_Name, Indicator_Code, Yr2016) %>% 
+  filter(Indicator_Code == "SP.DYN.LE00.FE.IN") %>% 
+  left_join(country) %>%
+  select(Country_Name, Region, Income_Group, Yr2016) %>% 
+  group_by(Income_Group, Region) %>% 
+  summarise(Av_Fem_Life_Exp = mean(Yr2016, na.rm = TRUE)) %>% 
+  drop_na() %>% 
+  arrange(Region, desc(Av_Fem_Life_Exp))
+```
+
