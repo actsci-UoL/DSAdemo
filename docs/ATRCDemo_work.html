@@ -11,7 +11,7 @@
 
 
 
-<title></title>
+<title>R markdown demo</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -307,13 +307,94 @@ $(document).ready(function () {
 
 
 
+<h1 class="title toc-ignore">R markdown demo</h1>
 
 </div>
 
 
-<div id="dsademo" class="section level1">
-<h1>DSAdemo</h1>
-<p>Demonstration of data wrangling and exploration with R</p>
+<p>Demo of some data wrangling using a subset of the World Bank Development Indicators “Excel download”&quot; from:</p>
+<p><a href="http://datatopics.worldbank.org/world-development-indicators/" class="uri">http://datatopics.worldbank.org/world-development-indicators/</a></p>
+<div id="read-in-the-data-as-data-frames" class="section level4">
+<h4>Read in the data as data frames</h4>
+<p>Data is available at <a href="https://github.com/actsci-UoL/DSAdemo/tree/master/Data" class="uri">https://github.com/actsci-UoL/DSAdemo/tree/master/Data</a> and needs to be saved locally in a sub-directory of the working directory called “Data”.</p>
+<p>Warning: one of the files is over 50Mb.</p>
+<pre class="r"><code>indicators &lt;- 
+  read_csv(&quot;Data/indicators.csv&quot;) %&gt;% 
+  mutate(Country_Code = as.factor(Country_Code),
+         Indicator_Code = as.factor(Indicator_Code))
+country &lt;- 
+  read_csv(&quot;Data/country.csv&quot;) %&gt;% 
+  mutate(Country_Code = as.factor(Country_Code),
+         Region = as.factor(Region),
+         Income_Group = as.factor(Income_Group))</code></pre>
+</div>
+<div id="questions" class="section level2">
+<h2>Questions</h2>
+<p>For each question below (not the first), find the answer using the <code>dplyr</code> package. In a later tutorial we will run through exctly the same sequence using SQL</p>
+<ul>
+<li>How many different indicators and countries are there?</li>
+<li>List the regional groups</li>
+<li>List the country names and codes</li>
+<li>Which country codes are not linked to a region?</li>
+<li>List the indicators that contain ‘life expectancy’ in the indicator name</li>
+<li>Find the average, minimum, and maximum female life expectancy at birth in 2016</li>
+<li>Find the name of the country with the minimum female life expectancy at birth
+<ul>
+<li>Print the countries with life expectancy &lt; 60 together with their region and Income group</li>
+<li>Print the countries with life expectancy &gt; 85 together with their region and Income group</li>
+</ul></li>
+<li>Plot life expectancy at birth vs percentage of births attended by a qualified medic</li>
+<li>Calculate the average female life expectancy at birth in 2016 for each region and income group.
+<ul>
+<li>Rename the life expectancy column to something meaningful and order by region and life expectancy.</li>
+</ul></li>
+</ul>
+</div>
+<div id="solutions" class="section level2">
+<h2>Solutions</h2>
+<div id="how-many-different-indicators-and-countries-are-there" class="section level4">
+<h4>How many different indicators and countries are there?</h4>
+<pre class="r"><code>#</code></pre>
+<pre class="r"><code>#</code></pre>
+</div>
+<div id="list-the-regional-groups" class="section level4">
+<h4>List the regional groups</h4>
+<pre class="r"><code>#</code></pre>
+</div>
+<div id="list-the-country-names-and-codes" class="section level4">
+<h4>List the country names and codes</h4>
+<pre class="r"><code>#</code></pre>
+</div>
+<div id="which-country-codes-are-not-linked-to-a-region" class="section level4">
+<h4>Which country codes are not linked to a region?</h4>
+<pre class="r"><code>#</code></pre>
+</div>
+<div id="list-the-indicators-that-contain-life-expectancy-in-the-indicator-name" class="section level4">
+<h4>List the indicators that contain ‘life expectancy’ in the indicator name</h4>
+<pre class="r"><code>#</code></pre>
+</div>
+<div id="find-the-average-minimum-and-maximum-female-life-expectancy-at-birth-in-2016" class="section level4">
+<h4>Find the average, minimum, and maximum female life expectancy at birth in 2016</h4>
+<pre class="r"><code>#</code></pre>
+</div>
+<div id="find-the-name-of-the-country-with-the-minimum-female-life-expectancy-at-birth" class="section level4">
+<h4>Find the name of the country with the minimum female life expectancy at birth</h4>
+<pre class="r"><code>#</code></pre>
+</div>
+<div id="plot-life-expectancy-at-birth-vs-percentage-of-births-attended-by-a-qualified-medic" class="section level4">
+<h4>Plot life expectancy at birth vs percentage of births attended by a qualified medic</h4>
+<pre class="r"><code># Find out the name of the indicator and its code.</code></pre>
+<pre class="r"><code># Make a plot.</code></pre>
+</div>
+<div id="use-a-join-to-add-region-and-income-group-to-the-indicators-table" class="section level4">
+<h4>Use a join to add Region and Income Group to the indicators table</h4>
+<pre class="r"><code># Print the countries with life expectancy &gt; 85 together with their region and Income group.</code></pre>
+<pre class="r"><code># Print the countries with life expectancy &lt; 60 together with their region and Income group.</code></pre>
+</div>
+<div id="calculate-the-average-female-life-expectancy-at-birth-in-2017-for-each-region-and-income-group." class="section level4">
+<h4>Calculate the average female life expectancy at birth in 2017 for each region and income group.</h4>
+<pre class="r"><code># Rename the life expectancy column to something meaningful and order by region and life expectancy.</code></pre>
+</div>
 </div>
 
 
