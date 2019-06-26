@@ -1,0 +1,163 @@
+---
+title: "R markdown demo"
+---
+
+Demo of some data wrangling using a subset of the World Bank Development Indicators "Excel download"" from:
+
+http://datatopics.worldbank.org/world-development-indicators/
+
+
+```{r setup, include=TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, include = TRUE, cache = FALSE, warning = FALSE, message = FALSE)
+library(knitr)
+library(tidyverse)
+```
+
+#### Read in the data as data frames
+
+Data is available at https://github.com/actsci-UoL/DSAdemo/tree/master/Data and needs to be saved locally in a sub-directory of the working directory called "Data". 
+
+Warning: one of the files is over 50Mb.
+
+```{r}
+indicators <- 
+  read_csv("Data/indicators.csv") %>% 
+  mutate(Country_Code = as.factor(Country_Code),
+         Indicator_Code = as.factor(Indicator_Code))
+country <- 
+  read_csv("Data/country.csv") %>% 
+  mutate(Country_Code = as.factor(Country_Code),
+         Region = as.factor(Region),
+         Income_Group = as.factor(Income_Group))
+```
+
+
+
+## Questions
+
+For each question below (not the first), find the answer using the `dplyr` package. In a later tutorial we will run through exctly the same sequence using SQL
+
+  * How many different indicators and countries are there?
+  * List the regional groups
+  * List the country names and codes
+  * Which country codes are not linked to a region?
+  * List the indicators that contain 'life expectancy' in the indicator name
+  * Find the average, minimum, and maximum female life expectancy at birth in 2016
+  * Find the name of the country with the minimum female life expectancy at birth
+    +  Print the countries with life expectancy < 60 together with their region and Income group
+    +  Print the countries with life expectancy > 85 together with their region and Income group
+  * Plot life expectancy at birth vs percentage of births attended by a qualified medic
+  * Calculate the average female life expectancy at birth in 2016 for each region and income group.
+    +  Rename the life expectancy column to something meaningful and order by region and life expectancy.
+    
+
+## Solutions
+
+
+#### How many different indicators and countries are there?
+
+```{r}
+#
+```
+
+
+```{r}
+#
+```
+
+
+
+#### List the regional groups
+
+
+```{r}
+#
+```
+
+
+#### List the country names and codes
+
+```{r}
+#
+```
+
+
+#### Which country codes are not linked to a region?
+
+```{r}
+#
+``` 
+
+
+
+#### List the indicators that contain 'life expectancy' in the indicator name
+
+
+```{r}
+#
+```
+
+
+
+#### Find the average, minimum, and maximum female life expectancy at birth in 2016
+
+```{r}
+#
+```
+
+
+#### Find the name of the country with the minimum female life expectancy at birth
+
+
+```{r}
+#
+```
+
+
+#### Plot life expectancy at birth vs percentage of births attended by a qualified medic
+
+
+
+
+```{r}
+# Find out the name of the indicator and its code.
+
+```
+
+
+
+```{r, include = TRUE}
+# Make a plot.
+
+```
+
+
+#### Use a join to add Region and Income Group to the indicators table
+
+
+
+```{r}
+# Print the countries with life expectancy > 85 together with their region and Income group.
+
+```
+
+
+
+
+```{r}
+# Print the countries with life expectancy < 60 together with their region and Income group.
+
+```
+
+
+#### Calculate the average female life expectancy at birth in 2017 for each region and income group.
+
+
+
+```{r}
+# Rename the life expectancy column to something meaningful and order by region and life expectancy.
+
+
+```
+
+
