@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>R markdown demo</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ATRC2019</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="ATRCDemo1.html">Model Solutions</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">R markdown demo</h1>
+
+</div>
+
+
+<p>Demo of something.</p>
+<p>Using the World Bank Development Indicators Excel download from:</p>
+<p><a href="http://datatopics.worldbank.org/world-development-indicators/" class="uri">http://datatopics.worldbank.org/world-development-indicators/</a></p>
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, eval = TRUE, include = TRUE, cache = FALSE)
+library(tidyverse)
+library(RSQLite)</code></pre>
+<div id="read-in-the-data-as-data-frames" class="section level3">
+<h3>Read in the data as data frames</h3>
+<pre class="r"><code>indicators &lt;- 
+  read_csv(&quot;Data/indicators.csv&quot;) %&gt;% 
+  mutate(Country_Code = as.factor(Country_Code),
+         Indicator_Code = as.factor(Indicator_Code))</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Country_Name = col_character(),
+##   Country_Code = col_character(),
+##   Indicator_Name = col_character(),
+##   Indicator_Code = col_character(),
+##   Yr2014 = col_double(),
+##   Yr2015 = col_double(),
+##   Yr2016 = col_double(),
+##   Yr2017 = col_double(),
+##   Yr2018 = col_double()
+## )</code></pre>
+<pre class="r"><code>country &lt;- 
+  read_csv(&quot;Data/country.csv&quot;) %&gt;% 
+  mutate(Country_Code = as.factor(Country_Code),
+         Region = as.factor(Region),
+         Income_Group = as.factor(Income_Group))</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Country_Code = col_character(),
+##   Region = col_character(),
+##   Income_Group = col_character()
+## )</code></pre>
+</div>
+<div id="questions" class="section level2">
+<h2>Questions</h2>
+<p>For each question below (not the first), find the answer first using pure SQL. Then check you can do the same using <code>dplr</code> operating on the data frames.</p>
+<ul>
+<li>Change the code creating the database to make a permanent file on disk</li>
+<li>How many different indicators are there?</li>
+<li>List the regional groups</li>
+<li>List the regional groups in alphabetical order</li>
+<li>List the regional groups in reverse alphabetical order</li>
+<li>Which country codes are not linked to a region?</li>
+<li>Calculate an average column
+<ul>
+<li>Return the average of the indicator for the years 2015-2017 for a country of your choice.</li>
+</ul></li>
+<li>List the indicators that contain ‘life expectancy’ in the indicator name</li>
+<li>Find the average and maximum female life expectancy at birth in 2017</li>
+<li>Find the name of the country with the maximum female life expectancy at birth
+<ul>
+<li>you can hardcode the value you found in the last query</li>
+</ul></li>
+<li>Find the name of the country with the minimum female life expectancy at birth in 2017
+<ul>
+<li>this time write a single query to find the minimum value and print the country name</li>
+</ul></li>
+<li>Use a join to add Region and Income Group to the indicators table
+<ul>
+<li>Print the countries with life expectancy &gt; 85 together with their region and Income group</li>
+</ul></li>
+<li>Calculate the average female life expectancy at birth in 2017 for each region and income group.
+<ul>
+<li>Rename the life expectancy column to something meaningful and order by region and life expectancy.</li>
+</ul></li>
+</ul>
+<div id="special-bonus-task" class="section level3">
+<h3>Special bonus task</h3>
+<p>Use `dbplyr (<a href="https://db.rstudio.com/dplyr/" class="uri">https://db.rstudio.com/dplyr/</a>) with the dplyr commands you have already written and check how closely the SQL it generates matches yours.</p>
+</div>
+</div>
+<div id="model-solutions" class="section level2">
+<h2>Model solutions</h2>
+<div id="how-many-different-indicators-and-countries-are-there" class="section level3">
+<h3>How many different indicators and countries are there?</h3>
+<pre class="r"><code>indicators %&gt;%  summarise(Num_indicators = n_distinct(Indicator_Code))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   Num_indicators
+##            &lt;int&gt;
+## 1           1599</code></pre>
+<pre class="r"><code>indicators %&gt;%  summarise(Num_countries = n_distinct(Country_Code))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   Num_countries
+##           &lt;int&gt;
+## 1           264</code></pre>
+</div>
+<div id="list-the-regional-groups" class="section level3">
+<h3>List the regional groups</h3>
+<p>Dplyr solution:</p>
+<pre class="r"><code>country %&gt;% filter(!is.na(Region)) %&gt;% select(Region) %&gt;% unique()</code></pre>
+<pre><code>## # A tibble: 7 x 1
+##   Region                    
+##   &lt;fct&gt;                     
+## 1 Latin America &amp; Caribbean 
+## 2 South Asia                
+## 3 Sub-Saharan Africa        
+## 4 Europe &amp; Central Asia     
+## 5 Middle East &amp; North Africa
+## 6 East Asia &amp; Pacific       
+## 7 North America</code></pre>
+</div>
+<div id="list-the-country-names-and-codes" class="section level3">
+<h3>List the country names and codes</h3>
+<pre class="r"><code>indicators %&gt;% 
+  select(Country_Code, Country_Name) %&gt;% 
+  unique() %&gt;% 
+  arrange(Country_Code) %&gt;% 
+  head(50)</code></pre>
+<pre><code>## # A tibble: 50 x 2
+##    Country_Code Country_Name        
+##    &lt;fct&gt;        &lt;chr&gt;               
+##  1 ABW          Aruba               
+##  2 AFG          Afghanistan         
+##  3 AGO          Angola              
+##  4 ALB          Albania             
+##  5 AND          Andorra             
+##  6 ARB          Arab World          
+##  7 ARE          United Arab Emirates
+##  8 ARG          Argentina           
+##  9 ARM          Armenia             
+## 10 ASM          American Samoa      
+## # ... with 40 more rows</code></pre>
+</div>
+<div id="which-country-codes-are-not-linked-to-a-region" class="section level3">
+<h3>Which country codes are not linked to a region?</h3>
+<pre class="r"><code>country %&gt;% 
+  filter(is.na(Region)) %&gt;% 
+  select(Country_Code) %&gt;% 
+  unique()</code></pre>
+<pre><code>## # A tibble: 46 x 1
+##    Country_Code
+##    &lt;fct&gt;       
+##  1 ARB         
+##  2 CEB         
+##  3 CSS         
+##  4 EAP         
+##  5 EAR         
+##  6 EAS         
+##  7 ECA         
+##  8 ECS         
+##  9 EMU         
+## 10 EUU         
+## # ... with 36 more rows</code></pre>
+</div>
+<div id="list-the-indicators-that-contain-life-expectancy-in-the-indicator-name" class="section level3">
+<h3>List the indicators that contain ‘life expectancy’ in the indicator name</h3>
+<p>Dplyr solution:</p>
+<pre class="r"><code>indicators %&gt;% 
+  filter(str_detect(Indicator_Name, &quot;(?i)life expectancy&quot;)) %&gt;% # (?i) says ignore case
+  select(Indicator_Name, Indicator_Code) %&gt;% 
+  unique()</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   Indicator_Name                           Indicator_Code   
+##   &lt;chr&gt;                                    &lt;fct&gt;            
+## 1 Life expectancy at birth, female (years) SP.DYN.LE00.FE.IN
+## 2 Life expectancy at birth, male (years)   SP.DYN.LE00.MA.IN
+## 3 Life expectancy at birth, total (years)  SP.DYN.LE00.IN</code></pre>
+<pre class="r"><code>indicators %&gt;% 
+  filter(str_detect(Indicator_Name, &quot;(?i)birth&quot;),
+         str_detect(Indicator_Name, &quot;(?i)attend&quot;)) %&gt;%
+  select(Indicator_Name, Indicator_Code) %&gt;% 
+  unique()</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   Indicator_Name                                       Indicator_Code
+##   &lt;chr&gt;                                                &lt;fct&gt;         
+## 1 Births attended by skilled health staff (% of total) SH.STA.BRTC.ZS</code></pre>
+</div>
+<div id="find-the-average-maximum-and-maximum-female-life-expectancy-at-birth-in-2016" class="section level3">
+<h3>Find the average, maximum, and maximum female life expectancy at birth in 2016</h3>
+<pre class="r"><code>indicators %&gt;% 
+  filter(Indicator_Code == &quot;SP.DYN.LE00.FE.IN&quot;) %&gt;% 
+  summarise(Av_Life_Exp = mean(Yr2016, na.rm = TRUE),
+            Min_Life_Exp = min(Yr2016, na.rm = TRUE),
+            Max_Life_Exp = max(Yr2016, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   Av_Life_Exp Min_Life_Exp Max_Life_Exp
+##         &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+## 1        74.5         52.4         87.3</code></pre>
+</div>
+<div id="find-the-name-of-the-country-with-the-minimum-female-life-expectancy-at-birth" class="section level3">
+<h3>Find the name of the country with the minimum female life expectancy at birth</h3>
+<pre class="r"><code>indicators %&gt;% 
+  filter(Indicator_Code == &quot;SP.DYN.LE00.FE.IN&quot;) %&gt;% 
+  filter(Yr2017 == min(Yr2017, na.rm = TRUE)) %&gt;% 
+  select(Country_Name, Yr2017)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   Country_Name Yr2017
+##   &lt;chr&gt;         &lt;dbl&gt;
+## 1 Sierra Leone   52.8</code></pre>
+</div>
+<div id="plot-life-expectancy-at-birth-vs-percentage-of-births-attended" class="section level3">
+<h3>Plot life expectancy at birth vs percentage of births attended…</h3>
+<pre class="r"><code>plt.df &lt;- indicators %&gt;% 
+  select(Country_Code, Indicator_Code, Yr2016) %&gt;% 
+  filter(Indicator_Code == &quot;SH.STA.BRTC.ZS&quot; | Indicator_Code == &quot;SP.DYN.LE00.FE.IN&quot;) %&gt;% 
+  filter(!is.na(Yr2016)) %&gt;% 
+  spread(key = Indicator_Code, value = Yr2016) %&gt;% 
+  drop_na() %&gt;% 
+  rename(Life_Exp = SP.DYN.LE00.FE.IN, Attended = SH.STA.BRTC.ZS)
+
+ggplot(plt.df) +
+  geom_point(aes(Attended, Life_Exp)) +
+  geom_smooth(aes(Attended, Life_Exp), method = lm)</code></pre>
+<p><img src="ATRCDemo1_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>plt.df &lt;- indicators %&gt;% 
+  select(Country_Code, Indicator_Code, Yr2016) %&gt;% 
+  filter(Indicator_Code == &quot;SH.STA.BRTC.ZS&quot; | Indicator_Code == &quot;SP.DYN.LE00.FE.IN&quot;) %&gt;% 
+  filter(!is.na(Yr2016)) %&gt;% 
+  spread(key = Indicator_Code, value = Yr2016) %&gt;% 
+  drop_na() %&gt;% 
+  rename(Life_Exp = SP.DYN.LE00.FE.IN, Attended = SH.STA.BRTC.ZS) %&gt;% 
+  left_join(country)</code></pre>
+<pre><code>## Joining, by = &quot;Country_Code&quot;</code></pre>
+<pre><code>## Warning: Column `Country_Code` joining factors with different levels,
+## coercing to character vector</code></pre>
+<pre class="r"><code>ggplot(plt.df) +
+  geom_point(aes(Attended, Life_Exp, color = Income_Group, shape = Income_Group), size = 3) +
+  geom_smooth(aes(Attended, Life_Exp), method = lm)</code></pre>
+<p><img src="ATRCDemo1_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="use-a-join-to-add-region-and-income-group-to-the-indicators-table" class="section level3">
+<h3>Use a join to add Region and Income Group to the indicators table</h3>
+<p>Print the countries with life expectancy &gt; 85 together with their region and Income group.</p>
+<pre class="r"><code>indicators %&gt;% 
+  select(Country_Code, Country_Name, Indicator_Code, Yr2016) %&gt;% 
+  filter(Indicator_Code == &quot;SP.DYN.LE00.FE.IN&quot;) %&gt;% 
+  filter(Yr2016 &gt; 85) %&gt;% 
+  rename(Fem_Life_Exp = Yr2016) %&gt;%
+  left_join(country) %&gt;%
+  select(Country_Name, Region, Fem_Life_Exp) %&gt;% 
+  arrange(desc(Fem_Life_Exp))</code></pre>
+<pre><code>## Joining, by = &quot;Country_Code&quot;</code></pre>
+<pre><code>## Warning: Column `Country_Code` joining factors with different levels,
+## coercing to character vector</code></pre>
+<pre><code>## # A tibble: 11 x 3
+##    Country_Name         Region                Fem_Life_Exp
+##    &lt;chr&gt;                &lt;fct&gt;                        &lt;dbl&gt;
+##  1 Hong Kong SAR, China East Asia &amp; Pacific           87.3
+##  2 Japan                East Asia &amp; Pacific           87.1
+##  3 Macao SAR, China     East Asia &amp; Pacific           86.8
+##  4 Spain                Europe &amp; Central Asia         86.3
+##  5 France               Europe &amp; Central Asia         85.7
+##  6 Italy                Europe &amp; Central Asia         85.6
+##  7 Switzerland          Europe &amp; Central Asia         85.6
+##  8 Korea, Rep.          East Asia &amp; Pacific           85.4
+##  9 Luxembourg           Europe &amp; Central Asia         85.4
+## 10 Bermuda              North America                 85.1
+## 11 Singapore            East Asia &amp; Pacific           85.1</code></pre>
+</div>
+<div id="calculate-the-average-female-life-expectancy-at-birth-in-2017-for-each-region-and-income-group." class="section level3">
+<h3>Calculate the average female life expectancy at birth in 2017 for each region and income group.</h3>
+<p>Rename the life expectancy column to something meaningful and order by region and life expectancy.</p>
+<pre class="r"><code>indicators %&gt;% 
+  select(Country_Code, Country_Name, Indicator_Code, Yr2016) %&gt;% 
+  filter(Indicator_Code == &quot;SP.DYN.LE00.FE.IN&quot;) %&gt;% 
+  left_join(country) %&gt;%
+  select(Country_Name, Region, Income_Group, Yr2016) %&gt;% 
+  group_by(Income_Group, Region) %&gt;% 
+  summarise(Av_Fem_Life_Exp = mean(Yr2016, na.rm = TRUE)) %&gt;% 
+  drop_na() %&gt;% 
+  arrange(Region, desc(Av_Fem_Life_Exp))</code></pre>
+<pre><code>## Joining, by = &quot;Country_Code&quot;</code></pre>
+<pre><code>## Warning: Column `Country_Code` joining factors with different levels,
+## coercing to character vector</code></pre>
+<pre><code>## Warning: Factor `Income_Group` contains implicit NA, consider using
+## `forcats::fct_explicit_na`</code></pre>
+<pre><code>## Warning: Factor `Region` contains implicit NA, consider using
+## `forcats::fct_explicit_na`</code></pre>
+<pre><code>## # A tibble: 24 x 3
+## # Groups:   Income_Group [4]
+##    Income_Group        Region                    Av_Fem_Life_Exp
+##    &lt;fct&gt;               &lt;fct&gt;                               &lt;dbl&gt;
+##  1 High income         East Asia &amp; Pacific                  83.6
+##  2 Upper middle income East Asia &amp; Pacific                  77.1
+##  3 Low income          East Asia &amp; Pacific                  75.1
+##  4 Lower middle income East Asia &amp; Pacific                  71.7
+##  5 High income         Europe &amp; Central Asia                83.3
+##  6 Upper middle income Europe &amp; Central Asia                77.8
+##  7 Lower middle income Europe &amp; Central Asia                75.5
+##  8 Low income          Europe &amp; Central Asia                74.2
+##  9 High income         Latin America &amp; Caribbean            80.2
+## 10 Upper middle income Latin America &amp; Caribbean            77.3
+## # ... with 14 more rows</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
