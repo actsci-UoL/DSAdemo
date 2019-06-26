@@ -306,14 +306,15 @@ $(document).ready(function () {
 </div>
 
 
-<p>Demo of something.</p>
-<p>Using the World Bank Development Indicators Excel download from:</p>
+<p>Demo of some data wrangling.</p>
+<p>Using a subset of the World Bank Development Indicators “Excel download”&quot; from:</p>
 <p><a href="http://datatopics.worldbank.org/world-development-indicators/" class="uri">http://datatopics.worldbank.org/world-development-indicators/</a></p>
 <pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, eval = TRUE, include = TRUE, cache = FALSE)
-library(tidyverse)
-library(RSQLite)</code></pre>
+library(tidyverse)</code></pre>
 <div id="read-in-the-data-as-data-frames" class="section level3">
 <h3>Read in the data as data frames</h3>
+<p>Data is available at <a href="https://github.com/actsci-UoL/DSAdemo/tree/master/Data" class="uri">https://github.com/actsci-UoL/DSAdemo/tree/master/Data</a> and needs to be saved locally in a sub-directory of the working directory called “Data”.</p>
+<p>Warning: one of the files is over 50Mb.</p>
 <pre class="r"><code>indicators &lt;- 
   read_csv(&quot;Data/indicators.csv&quot;) %&gt;% 
   mutate(Country_Code = as.factor(Country_Code),
@@ -344,41 +345,25 @@ library(RSQLite)</code></pre>
 </div>
 <div id="questions" class="section level2">
 <h2>Questions</h2>
-<p>For each question below (not the first), find the answer first using pure SQL. Then check you can do the same using <code>dplr</code> operating on the data frames.</p>
+<p>For each question below (not the first), find the answer using the <code>dplyr</code> package. In a later tutorial we will run through exctly the same sequence using SQL</p>
 <ul>
-<li>Change the code creating the database to make a permanent file on disk</li>
-<li>How many different indicators are there?</li>
+<li>How many different indicators and countries are there?</li>
 <li>List the regional groups</li>
-<li>List the regional groups in alphabetical order</li>
-<li>List the regional groups in reverse alphabetical order</li>
+<li>List the country names and codes</li>
 <li>Which country codes are not linked to a region?</li>
-<li>Calculate an average column
-<ul>
-<li>Return the average of the indicator for the years 2015-2017 for a country of your choice.</li>
-</ul></li>
 <li>List the indicators that contain ‘life expectancy’ in the indicator name</li>
-<li>Find the average and maximum female life expectancy at birth in 2017</li>
-<li>Find the name of the country with the maximum female life expectancy at birth
+<li>Find the average, minimum, and maximum female life expectancy at birth in 2016</li>
+<li>Find the name of the country with the minimum female life expectancy at birth
 <ul>
-<li>you can hardcode the value you found in the last query</li>
-</ul></li>
-<li>Find the name of the country with the minimum female life expectancy at birth in 2017
-<ul>
-<li>this time write a single query to find the minimum value and print the country name</li>
-</ul></li>
-<li>Use a join to add Region and Income Group to the indicators table
-<ul>
+<li>Print the countries with life expectancy &lt; 65 together with their region and Income group</li>
 <li>Print the countries with life expectancy &gt; 85 together with their region and Income group</li>
 </ul></li>
-<li>Calculate the average female life expectancy at birth in 2017 for each region and income group.
+<li>Plot life expectancy at birth vs percentage of births attended by a qualified medic</li>
+<li>Calculate the average female life expectancy at birth in 2016 for each region and income group.
 <ul>
 <li>Rename the life expectancy column to something meaningful and order by region and life expectancy.</li>
 </ul></li>
 </ul>
-<div id="special-bonus-task" class="section level3">
-<h3>Special bonus task</h3>
-<p>Use `dbplyr (<a href="https://db.rstudio.com/dplyr/" class="uri">https://db.rstudio.com/dplyr/</a>) with the dplyr commands you have already written and check how closely the SQL it generates matches yours.</p>
-</div>
 </div>
 <div id="model-solutions" class="section level2">
 <h2>Model solutions</h2>
@@ -466,15 +451,6 @@ library(RSQLite)</code></pre>
 ## 1 Life expectancy at birth, female (years) SP.DYN.LE00.FE.IN
 ## 2 Life expectancy at birth, male (years)   SP.DYN.LE00.MA.IN
 ## 3 Life expectancy at birth, total (years)  SP.DYN.LE00.IN</code></pre>
-<pre class="r"><code>indicators %&gt;% 
-  filter(str_detect(Indicator_Name, &quot;(?i)birth&quot;),
-         str_detect(Indicator_Name, &quot;(?i)attend&quot;)) %&gt;%
-  select(Indicator_Name, Indicator_Code) %&gt;% 
-  unique()</code></pre>
-<pre><code>## # A tibble: 1 x 2
-##   Indicator_Name                                       Indicator_Code
-##   &lt;chr&gt;                                                &lt;fct&gt;         
-## 1 Births attended by skilled health staff (% of total) SH.STA.BRTC.ZS</code></pre>
 </div>
 <div id="find-the-average-maximum-and-maximum-female-life-expectancy-at-birth-in-2016" class="section level3">
 <h3>Find the average, maximum, and maximum female life expectancy at birth in 2016</h3>
@@ -492,15 +468,26 @@ library(RSQLite)</code></pre>
 <h3>Find the name of the country with the minimum female life expectancy at birth</h3>
 <pre class="r"><code>indicators %&gt;% 
   filter(Indicator_Code == &quot;SP.DYN.LE00.FE.IN&quot;) %&gt;% 
-  filter(Yr2017 == min(Yr2017, na.rm = TRUE)) %&gt;% 
-  select(Country_Name, Yr2017)</code></pre>
+  filter(Yr2016 == min(Yr2016, na.rm = TRUE)) %&gt;% 
+  select(Country_Name, Yr2016)</code></pre>
 <pre><code>## # A tibble: 1 x 2
-##   Country_Name Yr2017
+##   Country_Name Yr2016
 ##   &lt;chr&gt;         &lt;dbl&gt;
-## 1 Sierra Leone   52.8</code></pre>
+## 1 Sierra Leone   52.4</code></pre>
 </div>
-<div id="plot-life-expectancy-at-birth-vs-percentage-of-births-attended" class="section level3">
-<h3>Plot life expectancy at birth vs percentage of births attended…</h3>
+<div id="plot-life-expectancy-at-birth-vs-percentage-of-births-attended-by-a-qualified-medic" class="section level3">
+<h3>Plot life expectancy at birth vs percentage of births attended by a qualified medic</h3>
+<p>Find out the name of the indicator and its code.</p>
+<pre class="r"><code>indicators %&gt;% 
+  filter(str_detect(Indicator_Name, &quot;(?i)birth&quot;),
+         str_detect(Indicator_Name, &quot;(?i)attend&quot;)) %&gt;%
+  select(Indicator_Name, Indicator_Code) %&gt;% 
+  unique()</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   Indicator_Name                                       Indicator_Code
+##   &lt;chr&gt;                                                &lt;fct&gt;         
+## 1 Births attended by skilled health staff (% of total) SH.STA.BRTC.ZS</code></pre>
+<p>Now make a plot.</p>
 <pre class="r"><code>plt.df &lt;- indicators %&gt;% 
   select(Country_Code, Indicator_Code, Yr2016) %&gt;% 
   filter(Indicator_Code == &quot;SH.STA.BRTC.ZS&quot; | Indicator_Code == &quot;SP.DYN.LE00.FE.IN&quot;) %&gt;% 
@@ -513,6 +500,7 @@ ggplot(plt.df) +
   geom_point(aes(Attended, Life_Exp)) +
   geom_smooth(aes(Attended, Life_Exp), method = lm)</code></pre>
 <p><img src="ATRCDemo1_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Another version.</p>
 <pre class="r"><code>plt.df &lt;- indicators %&gt;% 
   select(Country_Code, Indicator_Code, Yr2016) %&gt;% 
   filter(Indicator_Code == &quot;SH.STA.BRTC.ZS&quot; | Indicator_Code == &quot;SP.DYN.LE00.FE.IN&quot;) %&gt;% 
@@ -557,6 +545,32 @@ ggplot(plt.df) +
 ##  9 Luxembourg           Europe &amp; Central Asia         85.4
 ## 10 Bermuda              North America                 85.1
 ## 11 Singapore            East Asia &amp; Pacific           85.1</code></pre>
+<p>Print the countries with life expectancy &lt; 65 together with their region and Income group.</p>
+<pre class="r"><code>indicators %&gt;% 
+  select(Country_Code, Country_Name, Indicator_Code, Yr2016) %&gt;% 
+  filter(Indicator_Code == &quot;SP.DYN.LE00.FE.IN&quot;) %&gt;% 
+  filter(Yr2016 &lt; 65) %&gt;% 
+  rename(Fem_Life_Exp = Yr2016) %&gt;%
+  left_join(country) %&gt;%
+  select(Country_Name, Region, Fem_Life_Exp) %&gt;% 
+  arrange(desc(Fem_Life_Exp))</code></pre>
+<pre><code>## Joining, by = &quot;Country_Code&quot;</code></pre>
+<pre><code>## Warning: Column `Country_Code` joining factors with different levels,
+## coercing to character vector</code></pre>
+<pre><code>## # A tibble: 38 x 3
+##    Country_Name                         Region                 Fem_Life_Exp
+##    &lt;chr&gt;                                &lt;fct&gt;                         &lt;dbl&gt;
+##  1 Low income                           &lt;NA&gt;                           64.8
+##  2 Mauritania                           Sub-Saharan Africa             64.7
+##  3 Zambia                               Sub-Saharan Africa             64.5
+##  4 Fragile and conflict affected situa~ &lt;NA&gt;                           64.4
+##  5 Angola                               Sub-Saharan Africa             64.4
+##  6 Djibouti                             Middle East &amp; North A~         64.2
+##  7 Ghana                                Sub-Saharan Africa             63.7
+##  8 Heavily indebted poor countries (HI~ &lt;NA&gt;                           63.7
+##  9 Liberia                              Sub-Saharan Africa             63.5
+## 10 IDA blend                            &lt;NA&gt;                           63.0
+## # ... with 28 more rows</code></pre>
 </div>
 <div id="calculate-the-average-female-life-expectancy-at-birth-in-2017-for-each-region-and-income-group." class="section level3">
 <h3>Calculate the average female life expectancy at birth in 2017 for each region and income group.</h3>
