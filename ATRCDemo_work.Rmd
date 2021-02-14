@@ -21,11 +21,11 @@ Warning: one of the files is over 50Mb.
 
 ```{r}
 indicators <- 
-  read_csv("Data/indicators.csv") %>% 
+  read_csv("Data/Indicators.csv") %>% 
   mutate(Country_Code = as.factor(Country_Code),
          Indicator_Code = as.factor(Indicator_Code))
 country <- 
-  read_csv("Data/country.csv") %>% 
+  read_csv("Data/Country.csv") %>% 
   mutate(Country_Code = as.factor(Country_Code),
          Region = as.factor(Region),
          Income_Group = as.factor(Income_Group))

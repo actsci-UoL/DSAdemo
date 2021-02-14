@@ -8,7 +8,8 @@ http://datatopics.worldbank.org/world-development-indicators/
 
 
 ```{r setup, include=TRUE, echo = FALSE, message = FALSE, warning = FALSE}
-knitr::opts_chunk$set(echo = FALSE, eval = TRUE, include = FALSE, cache = FALSE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = FALSE, eval = TRUE, include = FALSE, cache = TRUE, warning = FALSE,
+                      message = FALSE, dplyr.summarise.inform = FALSE)
 library(knitr)
 library(tidyverse)
 ```
@@ -21,11 +22,11 @@ Warning: one of the files is over 50Mb.
 
 ```{r}
 indicators <- 
-  read_csv("Data/indicators.csv") %>% 
+  read_csv("Data/Indicators.csv") %>% 
   mutate(Country_Code = as.factor(Country_Code),
          Indicator_Code = as.factor(Indicator_Code))
 country <- 
-  read_csv("Data/country.csv") %>% 
+  read_csv("Data/Country.csv") %>% 
   mutate(Country_Code = as.factor(Country_Code),
          Region = as.factor(Region),
          Income_Group = as.factor(Income_Group))
@@ -57,9 +58,9 @@ For each question below (not the first), find the answer using the `dplyr` packa
 #### How many different indicators and countries are there?
 
 ```{r}
-num_indic <- 
-  indicators %>%  
-  summarise(Num_indicators = n_distinct(Indicator_Code))
+num_indic <-
+  indicators %>%
+  summarise(Num_indicators = n_distinct(Indicator_Code, na.rm = TRUE))
 num_indic
 ```
 There are `r num_indic[[1]]` different indicators.
@@ -67,7 +68,7 @@ There are `r num_indic[[1]]` different indicators.
 ```{r}
 num_coun <- 
   indicators %>%  
-  summarise(Num_countries = n_distinct(Country_Code))
+  summarise(Num_countries = n_distinct(Country_Code, na.rm = TRUE))
 num_coun
 ```
 There are `r num_coun[[1]]` different countries.
